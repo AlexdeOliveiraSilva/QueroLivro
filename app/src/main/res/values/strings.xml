@@ -8,6 +8,9 @@
     <string name="action_settings">Configurações</string>
     <string name="string_sim">Sim</string>
     <string name="string_nao">Não</string>
+
+
+
     <string name="string_livroapagado">Seu livro foi apagado do catelogo e não esta mais visivel a outros usuários. </string>
     <string name="solicitacoestitle">Solicitações de Livros</string>
     <string name="string_salvocomsucesso">Seu livro foi adicionado com sucesso. Aguarde o interesse de alguém</string>
