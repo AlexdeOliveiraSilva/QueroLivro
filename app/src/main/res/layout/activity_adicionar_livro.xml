@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="br.com.wg7sistemas.querolivro.AdicionarLivro">
+
+    <EditText
+        android:id="@+id/txtnomedolivro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:hint="Nome do Livro" />
+
+    <EditText
+        android:id="@+id/txtautordolivro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:hint="Autor do Livro" />
+
+    <EditText
+        android:id="@+id/txtprecodolivro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:hint="Preço do Livro" />
+
+    <ImageButton
+        android:id="@+id/btnfotolivro"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:layout_weight="2"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/addfoto" />
+
+    <Button
+        android:id="@+id/btnsalvarnovolivro"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_weight="2"
+        android:text="Salvar" />
+
+</LinearLayout>
