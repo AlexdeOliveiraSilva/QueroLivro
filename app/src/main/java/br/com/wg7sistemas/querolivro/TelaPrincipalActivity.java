@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -25,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -32,6 +34,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
@@ -53,6 +57,7 @@ public class TelaPrincipalActivity extends AppCompatActivity
     private RecyclerView lista;
     private List<Livro> listadelivros = new ArrayList<Livro>();
     private AdapterTelaInicial adpter;
+    private TextView nomedousuario;
     int contador = 0;
 
 
@@ -92,6 +97,9 @@ public class TelaPrincipalActivity extends AppCompatActivity
 
         popularlivros();
 
+//        nomedousuario = (TextView) navigationView.findViewById(R.id.txtnomesuario);
+//        nomedousuario.setText(Singleton.getInstance().usuariologado.getNome());
+
         //FirebaseInstanceId.getInstance().getToken()
         //Captura o "Id desde dispositivo" no firebase
 
@@ -116,7 +124,6 @@ public class TelaPrincipalActivity extends AppCompatActivity
     //Usa-se -1 na latitude e longitude quando não queiras que o servidor a trate
 
     public void enviarDadosCelularServidor(final  String tokenNotification, final double latitude, final double longitude){
-
         StringRequest postRequest = new StringRequest(Request.Method.POST,SingletonNetwork.URLserver + "updatebasicData",
                 new Response.Listener<String>() {
                     @Override
@@ -311,6 +318,18 @@ public class TelaPrincipalActivity extends AppCompatActivity
             Intent config = new Intent(this, ConfiguracoesActivity.class);
             startActivity(config);
         }else if(id == R.id.nav_exit){
+            try{
+                LoginManager.getInstance().logOut();
+            }
+            catch (Exception e){
+
+            }
+
+            SharedPreferences sharedPref = TelaPrincipalActivity.this.getSharedPreferences("br.com.wg7sistemas.querolivro.lg", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("conteudo", "");
+            editor.commit();
+
             finish();
         }
 
@@ -325,7 +344,7 @@ public class TelaPrincipalActivity extends AppCompatActivity
         double longitude = (location.getLongitude());
         //Envia somente uma vez
         // Quando o app é aberto
-        
+
         if(contador == 0){
             enviarDadosCelularServidor(FirebaseInstanceId.getInstance().getToken(),latitude, longitude);
             contador++;

@@ -16,4 +16,6 @@
     <string name="string_salvocomsucesso">Seu livro foi adicionado com sucesso. Aguarde o interesse de alguém</string>
     <string name="string_confirma_excluir_livro">Você tem certeza que deseja excluir este livro do aplicativo? Ele não ficará mais disponivel para outros usuários.</string>
 
+    <string name="facebook_app_id">419374198444123</string>
+
 </resources>
