@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -84,33 +85,7 @@ public class TelaPrincipalActivity extends AppCompatActivity
         lista.setAdapter(adpter);
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         lista.setLayoutManager(layout);
-        lista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = lista.getChildLayoutPosition(view);
-                AlertDialog.Builder builder = new AlertDialog.Builder(TelaPrincipalActivity.this);
-                //define o titulo
-                builder.setTitle(R.string.app_name);
-                //define a mensagem
-                builder.setMessage("Você deseja demonstrar interesse pelo livro " + listadelivros.get(position).getNome() + " ao seu dono?");
-                //define um botão para finalizar
-                builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                            //Implementar solicitar ao servidor
-                    }
-                });
 
-                builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-                //cria o AlertDialog e abre
-                builder.create().show();
-
-            }
-        });
 
 
         popularlivros();
@@ -127,6 +102,7 @@ public class TelaPrincipalActivity extends AppCompatActivity
 
     }
 
+
     public void popularlivros(){
         StringRequest postRequest = new StringRequest(Request.Method.POST,SingletonNetwork.URLserver + "getAllBooksAvaliable",
                 new Response.Listener<String>() {
@@ -138,6 +114,7 @@ public class TelaPrincipalActivity extends AppCompatActivity
                                     JSONObject temp = allboks.getJSONObject(i);
                                     Usuario user = new Usuario(temp.getString("UserName"), temp.getString("WhatsApp"), temp.getInt("UserCode"));
                                     Livro l = new Livro(temp.getString("Name"), temp.getString("Author"), temp.getString("Photo"), temp.getInt("Year"), temp.getDouble("Price"), 0.00, user);
+                                        l.setId(temp.getInt("IdBook"));
                                     listadelivros.add(l);
                             }
 
