@@ -32,6 +32,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +53,7 @@ public class TelaPrincipalActivity extends AppCompatActivity
     private RecyclerView lista;
     private List<Livro> listadelivros = new ArrayList<Livro>();
     private AdapterTelaInicial adpter;
+    int contador = 0;
 
 
     @Override
@@ -90,18 +92,91 @@ public class TelaPrincipalActivity extends AppCompatActivity
 
         popularlivros();
 
+        //FirebaseInstanceId.getInstance().getToken()
+        //Captura o "Id desde dispositivo" no firebase
+
+        enviarDadosCelularServidor(FirebaseInstanceId.getInstance().getToken(), -1.0, -1.0);
+
+
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getBaseContext(),"Não existe permissão para localização",
                     Toast.LENGTH_LONG).show();
             return;
-        }else
+        }else{
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        }
 
 
     }
 
+    //Método que envia para o servidor dados relacionados a notificação, latitude e longitude
+    //Usa-se -1 na latitude e longitude quando não queiras que o servidor a trate
+
+    public void enviarDadosCelularServidor(final  String tokenNotification, final double latitude, final double longitude){
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST,SingletonNetwork.URLserver + "updatebasicData",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String json = null;
+                        NetworkResponse response = error.networkResponse;
+                        if(response != null && response.data != null){
+                            switch(response.statusCode) {
+                                default:
+                                    String value = null;
+                                    try {
+
+                                        value = new String(response.data, "UTF-8");
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
+                                    json = trimMessage(value, "message");
+                                    break;
+                            }
+                        }
+                        error.printStackTrace();
+                    }
+                    public String trimMessage(String json, String key){
+                        String trimmedString = null;
+                        try{
+                            JSONObject obj = new JSONObject(json);
+                            trimmedString = obj.getString(key);
+                        } catch(JSONException e){
+                            e.printStackTrace();
+                            return null;
+                        }
+                        return trimmedString;
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                //Aqui se passa os parametros para o servidor
+                params.put("latitude", Double.toString(latitude));
+                params.put("longitude", Double.toString(longitude));
+                params.put("token", tokenNotification);
+                params.put("user", Integer.toString(Singleton.getInstance().usuariologado.getId()));
+                return params;
+            }
+        };
+
+        // This adds the request to the request queue
+        SingletonNetwork.getInstance(TelaPrincipalActivity.this)
+                .addToRequestQueue(postRequest);
+
+
+    }
 
     public void popularlivros(){
         StringRequest postRequest = new StringRequest(Request.Method.POST,SingletonNetwork.URLserver + "getAllBooksAvaliable",
@@ -248,6 +323,14 @@ public class TelaPrincipalActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         double latitude =  (location.getLatitude());
         double longitude = (location.getLongitude());
+        //Envia somente uma vez
+        // Quando o app é aberto
+        
+        if(contador == 0){
+            enviarDadosCelularServidor(FirebaseInstanceId.getInstance().getToken(),latitude, longitude);
+            contador++;
+
+        }
 
     }
 

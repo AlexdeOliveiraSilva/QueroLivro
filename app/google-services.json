@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "971569294806",
+    "firebase_url": "https://quero-livro.firebaseio.com",
+    "project_id": "quero-livro",
+    "storage_bucket": "quero-livro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971569294806:android:09fe0249b3458827",
+        "android_client_info": {
+          "package_name": "br.com.wg7sistemas.querolivro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "971569294806-5lmglsgp0dkkfil1n44q65vs4c5mbajk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOfsuAkyqe7dXAJxw-XV5tgvLTz5dhQ_Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
